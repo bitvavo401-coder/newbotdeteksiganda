@@ -2,18 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy requirements first for better caching
+# Salin file requirements terlebih dahulu untuk memanfaatkan caching Docker
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
+# Salin seluruh kode aplikasi
 COPY . .
 
-# Create volume for database persistence
-VOLUME ["/app/data"]
-
-# Set environment variables
+# Set environment variable untuk memastikan log Python langsung ditampilkan
 ENV PYTHONUNBUFFERED=1
 
-# Run the bot
+# Perintah untuk menjalankan bot
 CMD ["python", "main.py"]
