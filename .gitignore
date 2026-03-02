@@ -17,6 +17,7 @@ venv.bak/
 *.sqlite
 *.sqlite3
 /data/
+!data/.gitkeep
 
 # Logs
 *.log
