@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: telegram-duplicate-bot
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - USE_WEBHOOK=false
+      - DB_PATH=/app/data/messages.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
