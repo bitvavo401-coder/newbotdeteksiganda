@@ -11,6 +11,12 @@ import signal
 import sys
 import pytz
 
+print("=== DEBUG INFO ===")
+print(f"Current directory: {os.getcwd()}")
+print(f"Files in current dir: {os.listdir('.')}")
+print(f"Python path: {sys.path}")
+print("==================")
+
 # Setup logging
 try:
     sys.stdout.reconfigure(encoding='utf-8')
