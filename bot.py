@@ -6,7 +6,7 @@ from telegram.ext import Application, MessageHandler, filters, CommandHandler
 from telegram import Update
 import sqlite3
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 import signal
 import sys
 import pytz
@@ -15,11 +15,17 @@ import traceback
 # Setup logging dengan encoding UTF-8
 try:
     sys.stdout.reconfigure(encoding='utf-8')
-except AttributeError:
+except (AttributeError, ValueError):
     pass
 
-# Set timezone untuk logging ke Jakarta
-logging.Formatter.converter = lambda *args: datetime.now(pytz.timezone('Asia/Jakarta')).timetuple()
+# Set timezone untuk logging ke Jakarta - PERBAIKAN BARIS 26
+try:
+    jakarta_tz = pytz.timezone('Asia/Jakarta')
+    logging.Formatter.converter = lambda *args: datetime.now(jakarta_tz).timetuple()
+except pytz.exceptions.UnknownTimeZoneError:
+    # Fallback ke UTC jika timezone tidak ditemukan
+    logging.Formatter.converter = time.gmtime
+    print("Warning: Could not set Jakarta timezone, using UTC")
 
 # Konfigurasi logging
 logging.basicConfig(
