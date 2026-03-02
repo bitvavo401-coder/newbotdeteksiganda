@@ -2,15 +2,23 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Salin file requirements terlebih dahulu untuk memanfaatkan caching Docker
-COPY requirements.txt .
+# Debug: Lihat isi direktori setelah copy
+COPY . .
+RUN ls -la && pwd
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Salin seluruh kode aplikasi
-COPY . .
-
-# Set environment variable untuk memastikan log Python langsung ditampilkan
+# Set environment variables
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
 
-# Perintah untuk menjalankan bot
+# Cek apakah main.py ada
+RUN if [ ! -f main.py ]; then \
+    echo "Error: main.py tidak ditemukan!"; \
+    ls -la; \
+    exit 1; \
+    fi
+
+# Jalankan bot
 CMD ["python", "main.py"]
