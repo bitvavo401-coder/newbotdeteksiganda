@@ -2,23 +2,23 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Debug: Lihat isi direktori setelah copy
-COPY . .
-RUN ls -la && pwd
-
 # Install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy aplikasi
+COPY . .
+
+# Buat direktori untuk database
+RUN mkdir -p /app/data
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 
-# Cek apakah main.py ada
-RUN if [ ! -f main.py ]; then \
-    echo "Error: main.py tidak ditemukan!"; \
-    ls -la; \
-    exit 1; \
-    fi
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
 
 # Jalankan bot
 CMD ["python", "main.py"]
