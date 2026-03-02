@@ -1,6 +1,6 @@
-# Di bagian akhir file main.py Anda, pastikan ada:
 def main():
     """Main function to run the bot"""
+    bot = None  # Inisialisasi bot sebagai None
     try:
         bot = ProductionDuplicateBot()
         
@@ -12,8 +12,14 @@ def main():
         else:
             bot.run_polling()
             
+    except KeyboardInterrupt:
+        logger.info("👋 Bot stopped by user")
+        if bot and hasattr(bot, 'conn') and bot.conn:
+            bot.conn.close()
+        sys.exit(0)
     except Exception as e:
         logger.error(f"❌ Failed to start bot: {e}")
+        # Jangan akses bot.conn di sini karena mungkin bot tidak terinisialisasi
         sys.exit(1)
 
 if __name__ == "__main__":
